@@ -1,0 +1,170 @@
+*{
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+}
+
+#container{
+  padding-top: 24px;
+  justify-content: center;
+  padding-left: 29px;
+  padding-right: 29px;
+  padding-bottom: 150px;
+}
+
+.strongP{
+  color: #9D2143;
+  font-weight: bolder;
+  font-size: 40px;
+  letter-spacing: 0.5px;
+}
+
+.underline{
+  width: 15%;
+  padding: 2px;
+  background-color: #FF9602;
+  margin-bottom: 35px;
+}
+
+.sect{
+  padding-top: 2px;
+}
+
+.Pbolds{
+  font-weight: bold;
+  padding-bottom: 10px;
+}
+
+span{
+  font-weight: bold;
+}
+
+.sect p{
+  line-height: 25px;
+  font-size: 16px;
+  letter-spacing: 0px;
+  text-justify: distribute;
+}
+
+.coloredBottom{
+  background-color: #9d2143;
+  display: flex;
+  justify-content: auto;
+  padding: 30px 0px;
+}
+
+.bottomP{
+  width: 53%;
+  margin-left: 130px;
+}
+
+.bottomP p{
+  font-weight: 500;
+  font-size: 32px;
+  color: #FF9602;
+  line-height: 38px;
+}
+
+.bottomB{
+  width: 47%;
+  position: relative;
+  margin-left: 260px;
+  margin-top: 20px;
+}
+
+.bottomB button{
+  padding: 15px;
+  background-color: #c23a60;
+  border: 0px #c23a60;
+  color: white;
+  border-radius: 6px;
+}
+
+.bottomBorder{
+  width: 100%;
+  padding: 3px;
+  background-color: #FF9602;
+}
+
+.containerHowItWorks{
+  padding-top: 24px;
+  /* justify-content: center; */
+  padding-left: 29px;
+  padding-right: 29px;
+}
+
+.HwItWrks{
+  color: #9D2143;
+  font-size: 22px;
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
+.HwItWrksP{
+  margin-bottom: 55px;
+}
+
+.roundborder{
+  display: flex;
+  width:32%;
+  margin: 0 auto;
+  border: 3px solid #9D2143;
+  border-radius: 100px 100px;
+}
+
+.custo{
+  border-right: 3px solid #9D2143;
+  width:33%;
+}
+
+.roundborder p{
+  padding: 10px 6px 0px 6px;
+  font-size: 16px;
+  font-family: sans-serif;
+  font-weight: bold;
+  /* justify-items: space-around; */
+  text-align: center;
+}
+
+.column{
+  float: left;
+  width: 33.33%;
+  margin-top: 20px;
+}
+
+.images{
+  margin-top: 60px;
+}
+
+.images div{
+  margin-bottom: 110px;
+  margin-left: 250px;
+}
+
+.images img{
+  width: 90px;
+}
+
+.icons div{
+  margin-left: 150px;
+  margin-bottom: 10px;
+}
+
+.iconround img{
+  background-color: #9D2143;
+  padding: 17px;
+  border-radius: 50%;
+}
+
+.dotted img{
+  width: 4px;
+  margin-left: 21px;
+  margin-top: -9px;
+  margin-bottom: -8px;
+}
+
+.text div{
+  margin-left: -140px;
+}
+
+
