@@ -7,41 +7,37 @@ use Illuminate\Http\Request;
 
 class NeduController extends Controller
 {
-    public function Nedu(Request $request)
+    public function index(Request $request)
     {
-        if($request->isMethod("post")){
-           
-            // $data = $request->all();
-
+        if ($request->isMethod("post")) {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'message' => 'required|string'
+            ]);
             
-            $save = chinedu::Create($request->all());
+            $save = chinedu::create($request->all());
 
-            // dd($save);
-            if($save){
-
-                return back()->with("success", "Successfully Submitted");
+            if ($save) {
+                return back()->with("success", "Message submitted successfully");
             }
 
-
-
+            return back()->with("error", "Failed to submit message. Please try again.");
         }
 
-        $data_s = chinedu::all();
-
-        // dd($data_s);
-
-        return view("chinedu",compact("data_s"));
+        $data = chinedu::latest()->get();
+        return view("chinedu", compact("data"));
     }
 
     public function delete(Request $request)
     {
+        $record = chinedu::find($request->id);
+        
+        if (!$record) {
+            return back()->with("error", "Record not found");
+        }
 
-
-       chinedu::where("id" , $request->id)->delete();
-
-      
-
-
-      return redirect("/nedu");
+        $record->delete();
+        return redirect()->route('nedu')->with("success", "Record deleted successfully");
     }
 }

@@ -17,41 +17,23 @@ class AdminController extends Controller
     public function login(Request $request)
     {
         if(session()->has('login')) {
-            return redirect('/dashboard');
+            return redirect()->route('admin.dashboard');
         }
 
         if ($request->isMethod('post')) {
-
-
-            $response = $request->validate([
-
-                'password' => 'required',
-                'email' => 'required'
-
+            $request->validate([
+                'email' => 'required|email|max:255',
+                'password' => 'required|string|min:8'
             ]);
 
-
-            $usernames = User::where(['email' => $request->email])->get();
-           
-            foreach($usernames as $username){
-
-                $username = $username['name'];
+            $user = User::where('email', $request->email)->first();
+            
+            if ($user && Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                $request->session()->put('login', $request->email);
+                return redirect()->route('admin.dashboard')->with('username', $user->name);
             }
-
-
-          
-
-        
-
-            if (Auth::attempt($response) > 0) {
-
-                    $request->session()->put('login', $request->email);
-               
-                    return redirect("/dashboard")->with('username', $username);
-             
-            } else {
-                return back()->with('error', 'Wrong Email or Password Entered');
-            }
+            
+            return back()->with('error', 'Invalid email or password');
         }
 
         return view('admin.login');
@@ -60,40 +42,28 @@ class AdminController extends Controller
     public function sign_up(Request $request)
     {
         if ($request->isMethod('post')) {
-
             $request->validate([
-
-                'password' => 'required|confirmed',
-                'password_confirmation' => 'required',
-                'email' => 'required|unique:user_admins',
-                'name' => 'required'
-
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|max:255|unique:users',
+                'password' => 'required|string|min:8|confirmed',
+                'password_confirmation' => 'required|string|min:8'
             ]);
 
-            $data = $request->all();
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password)
+            ]);
 
-             $data['password'] = Hash::make($request->password);
-
-            $save = User::Create($data);
-
-            if ($save) {
-               
-                return redirect('/');
-            } else {
-                return back()->with('error', 'you don cook beans');
+            if ($user) {
+                return redirect()->route('admin.login')->with('success', 'Account created successfully. Please login.');
             }
+            
+            return back()->with('error', 'Failed to create account. Please try again.');
         }
 
-        
-       return view('Admin.sign-up');
+        return view('Admin.sign-up');
     }
-
-
-
-
-
-
-
 
     public function dashboard(Request $request)
     {
@@ -102,7 +72,6 @@ class AdminController extends Controller
         
        return view('Admin.dashboard', compact('contacts'));
     }
-
 
     public function order(Request $request)
     {
@@ -201,45 +170,35 @@ class AdminController extends Controller
     }
     public function add_blog(Request $request)
     {
-        
-            if ($request->isMethod('post')) {
-                $request->validate([
-                    'author' => 'required',
-                    'title' => 'required',
-                    'content' => 'required',
-                    'blog_img' => 'required',
-                    'category' => 'required'
-                ]);
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'author' => 'required|string|max:255',
+                'title' => 'required|string|max:255',
+                'content' => 'required|string',
+                'blog_img' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'category' => 'required|string|in:popular,regular'
+            ]);
 
-                $data['author'] = $request->author;
-                $data['title'] = $request->title;
-                $data['content'] = $request->content;
-                $data['category'] = $request->category;
-                $data['blog_img'] = $_FILES['blog_img']['name'];
+            $image = $request->file('blog_img');
+            $imageName = time() . '.' . $image->extension();
+            $image->move(public_path('blog_img'), $imageName);
 
-                
-          $blog_img = $_FILES['blog_img']['name'];
-          $blog_img_tmp = $_FILES['blog_img']['tmp_name'];
+            $blog = Blog::create([
+                'author' => $request->author,
+                'title' => $request->title,
+                'content' => $request->content,
+                'category' => $request->category,
+                'blog_img' => $imageName
+            ]);
 
-          move_uploaded_file($blog_img_tmp, "./blog_img/" .$blog_img);
-
-
-                
-                $save = Blog::Create($data);
-
-                if($save){
-
-                    return back()->with('success', 'Uploaded Successfully');
-                }
-
-             
-               
+            if ($blog) {
+                return back()->with('success', 'Blog post created successfully');
             }
 
-       
-        $data = Calculator::find($request->id);
-        
-       return view('Admin.add-blog');
+            return back()->with('error', 'Failed to create blog post. Please try again.');
+        }
+
+        return view('Admin.add-blog');
     }
 
     

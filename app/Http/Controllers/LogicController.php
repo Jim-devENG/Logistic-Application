@@ -18,51 +18,43 @@ class LogicController extends Controller
     {
         if ($request->isMethod('post')) {
             $request->validate([
-                'name' => 'required',
-                'email' => 'required',
-                'phone' => 'required',
-                'pick' => 'required',
-                'weight' => 'required',
-                'drop' => 'required',
-                'distance' => 'required',
-                'carrier' => 'required',
-
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'phone' => 'required|string|max:20',
+                'pick' => 'required|string|max:255',
+                'weight' => 'required|numeric|min:0',
+                'drop' => 'required|string|max:255',
+                'distance' => 'required|numeric|min:0',
+                'carrier' => 'required|string|in:Air Freight,Ocean Freight,Road Freight',
             ]);
 
             $data = $request->all();
-
-            return redirect()->route('data', $data);
+            return redirect()->route('quote.estimate', $data);
         }
         return view('index');
     }
+
     public function quote(Request $request)
     {
         if ($request->isMethod('post')) {
             $request->validate([
-                'name' => 'required',
-                'email' => 'required',
-                'phone' => 'required',
-                'pick' => 'required',
-                'weight' => 'required',
-                'drop' => 'required',
-                'distance' => 'required',
-                'carrier' => 'required',
-
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'phone' => 'required|string|max:20',
+                'pick' => 'required|string|max:255',
+                'weight' => 'required|numeric|min:0',
+                'drop' => 'required|string|max:255',
+                'distance' => 'required|numeric|min:0',
+                'carrier' => 'required|string|in:Air Freight,Ocean Freight,Road Freight',
             ]);
 
             $data = $request->all();
-
-
-            return redirect()->route('data', $data);
+            return redirect()->route('quote.estimate', $data);
         }
         return view('quote');
     }
 
-
-
-
     public function quote_estimate(Request $request)
-
     {
         if ($request->isMethod('get')) {
             $data = $request->all();
@@ -96,9 +88,6 @@ class LogicController extends Controller
             }
         }
 
-
-
-
         if ($request->isMethod('post')) {
             $data = $request->all();
             $tracking = uniqid();
@@ -107,20 +96,15 @@ class LogicController extends Controller
             $data['tracking_id'] = $tracking;
             $data['status'] = $status;
 
-
-
             $save = Order::Create($data);
             if ($save) {
-                
                 Mail::to($request->email)->send(new verification($data));
 
                 $name = $request->name;
                 $tracking = $tracking;
                 $data_order = [
-
                     'name' => $name,
                     'track' => $tracking
-
                 ];
 
                 return redirect()->route('placed', $data_order);
@@ -151,20 +135,13 @@ class LogicController extends Controller
 
         $popular = Blog::where(['category' => 'popular'])->get();
 
-
         return view('blog', compact('data', 'popular'));
     }
 
-  
-
     public function readMore_blog(Request $request)
     {
-
-
         $data = Blog::find($request->id);
         $popular = Blog::where(['category' => 'popular'])->get();
-
-
 
         return view('Admin.read-more-blog', compact('data', 'popular'));
     }
@@ -173,38 +150,32 @@ class LogicController extends Controller
     {
         if ($request->isMethod('post')) {
             $request->validate([
-                'name' => 'required',
-                'email' => 'required',
-                'phone' => 'required',
-                'subject' => 'required',
-                'comment' => 'required',
-
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'phone' => 'required|string|max:20',
+                'subject' => 'required|string|max:255',
+                'comment' => 'required|string',
             ]);
 
             $save = Contact::Create($request->all());
             if ($save) {
-                return redirect('/contact#contact')->with('success', 'Contact Uploaded Successfully');
+                return redirect('/contact#contact')->with('success', 'Message sent successfully');
             } else {
-                return back()->with('error', 'you don cook beans');
+                return back()->with('error', 'Failed to send message. Please try again.');
             }
         }
         return view('contact');
     }
 
-
-
     public function track_parcel(Request $request)
     {
         if ($request->isMethod('POST')) {
             $request->validate([
-
                 'track_id' => 'required'
-
             ]);
             $tracks = Order::where(['tracking_id' => $request->track_id])->first();
 
             if ($tracks !== null) {
-
                 return view('track-parcel', compact('tracks'));
             } else {
                 return redirect('/track-parcel#track')->with('error', '!Tracking Id does not exit. Confirm and try again');
@@ -217,20 +188,18 @@ class LogicController extends Controller
     public function blogApi(Request $request)
     {
         $blogs = Blog::all();
-      
         return response()->json($blogs);
-        dd($blogs);
     }
+
     public function singleBlogApi($id)
     {
         $blog = Blog::find($id);
-      
         return response()->json($blog);
     }
+
     public function author()
     {
         $author = User::all();
-      
         return response()->json($author);
     }
 }

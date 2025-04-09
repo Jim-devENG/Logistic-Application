@@ -13,3 +13,10 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+.DS_Store
+/public/css
+/public/js
+/public/mix-manifest.json
+package-lock.json
+yarn.lock
+database/database.sqlite
